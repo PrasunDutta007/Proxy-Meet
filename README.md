@@ -190,7 +190,7 @@ ffmpeg -version
 You should see FFmpeg version information if installed correctly.
 
 #### 7.5 Download & Install VB-CABLE
-1. Go to [VB-CABLE]([https://ffmpeg.org/download.html#build-windows](https://vb-audio.com/Cable/index.htm))
+1. Go to [VB-CABLE](https://vb-audio.com/Cable/index.htm)
 2. Download the latest VB-CABLE Driver and follow the on-page installation instruction to Install
 
 

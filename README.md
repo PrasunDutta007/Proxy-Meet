@@ -7,6 +7,11 @@ generates structured meeting notes using multiple AI agents and logs it into Not
 
 **⚠️ Note:** This application is currently optimized for Windows OS and may not function properly on macOS or Linux.
 
+<div align="center">
+  <img src="pics/demo.gif" alt="Proxy-Meet Demo" />
+  <p><em><b>Proxy-Meet Demo: Intelligent Meeting Automation</b></em></p>
+</div>
+
 
 ## 🚀 Features
 
@@ -383,6 +388,11 @@ Choose your preferred method below to get started.
 
 3. **Relax and Let Proxy-Meet Handle the Rest** 😌
 
+<div align="center">
+  <img src="pics/interface.png" alt="interface" />
+  <p><em><b>Meeting Scheduler Interface</b></em></p>
+</div>
+
 ### 💻 Method 2: Command Line Interface
 
 #### Steps:
@@ -407,6 +417,11 @@ Once your meeting concludes, Proxy-Meet automatically springs into action:
 - 🎵 Complete meeting audio recording
 - 📝 Full meeting transcript
 - 📋 Organized meeting notes and insights
+
+<div align="center">
+  <img src="pics/interface_2.gif" alt="interface" />
+  <p><em><b>Meeting Analyzer Interface</b></em></p>
+</div>
 
 
 

@@ -2,8 +2,13 @@
 
 ![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-blue?logo=windows)
 
+Feeling under the weather? Called away for an urgent matter? Don't let unexpected circumstances force you to miss important online meetings. PROXY-MEET seamlessly handles your meeting attendance, ensuring you maintain your commitments even when life gets in the way.
+
+Whether you're dealing with illness, family emergencies, or conflicting priorities, PROXY-MEET provides reliable meeting coverage so you never have to choose between your responsibilities and your well-being.
+
 An intelligent meeting automation system that acts as your proxy in online meetings, providing automated attendance, interacts when your name is called, 
 generates structured meeting notes using multiple AI agents and logs it into Notion, and creates professional Minutes of Meeting (MoM) email drafts.
+
 
 **⚠️ Note:** This application is currently optimized for Windows OS and may not function properly on macOS or Linux.
 
@@ -11,6 +16,7 @@ generates structured meeting notes using multiple AI agents and logs it into Not
   <img src="pics/demo.gif" alt="Proxy-Meet Demo" />
   <p><em><b>Proxy-Meet Demo: Intelligent Meeting Automation</b></em></p>
 </div>
+
 
 
 ## 🚀 Features
@@ -54,6 +60,7 @@ Before setting up Proxy-Meet, ensure you have:
 - Python 3.8 or higher
 - OBS Studio 
 - ffmpeg
+- VB-CABLE (Virtual Audio Device)
 - Google Cloud Platform Account
 - Google API key (for Gemini AI)
 - Notion API key & Database Id
@@ -121,7 +128,7 @@ LANGFUSE_HOST="https://cloud.langfuse.com"
 1. **Download OBS Studio:**
    - Go to [OBS Studio](https://obsproject.com/)
    - Download the installer for Windows
-   - Run the installer and complete the installation
+   - Run the installer and complete the installation (make sure the installation location is in `C:\Program Files\`)
 
 #### 6.2 Configuration:
 
@@ -148,7 +155,7 @@ LANGFUSE_HOST="https://cloud.langfuse.com"
 
 **Note:** This OBS configuration will allow your Proxy-Meet application to use the pre-recorded video as a virtual camera source during meetings.
 
-### Step 7: FFmpeg Setup
+### Step 7: FFmpeg & VB-Cable Setup
 FFmpeg is required for audio processing in Proxy-Meet. Follow these steps to install it on Windows:
 
 #### 7.1 Download FFmpeg
@@ -187,6 +194,10 @@ Open a new command prompt and test:
 ffmpeg -version
 ```
 You should see FFmpeg version information if installed correctly.
+
+#### 7.5 Download & Install VB-CABLE
+1. Go to [VB-CABLE](https://vb-audio.com/Cable/index.htm)
+2. Download the latest VB-CABLE Driver and follow the on-page installation instruction to Install
 
 
 ### Step 8: Notion Integration Setup

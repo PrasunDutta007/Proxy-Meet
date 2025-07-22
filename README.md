@@ -422,8 +422,20 @@ Choose your preferred method below to get started.
 
 Once your meeting concludes, Proxy-Meet automatically springs into action:
 
-✅ **Gmail Integration** - Creates a comprehensive Minutes of Meeting (MoM) draft in your Gmail  
-✅ **Notion Logging** - Saves detailed meeting notes to your Notion workspace  
+✅ **Gmail Integration** - Creates a comprehensive Minutes of Meeting (MoM) draft in your Gmail
+
+<div align="center">
+  <img src="pics/gmail_automate.png" alt="gmail" />
+  <p><em><b>Automated Gmail Draft</b></em></p>
+</div>
+
+✅ **Notion Logging** - Saves detailed meeting notes to your Notion workspace
+
+<div align="center">
+  <img src="pics/notion_automate.png" alt="notion" />
+  <p><em><b>Automated Notion Notes</b></em></p>
+</div>
+
 ✅ **Interactive Dashboard** - Opens a beautiful Streamlit interface featuring:
 - 🎵 Complete meeting audio recording
 - 📝 Full meeting transcript

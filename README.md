@@ -426,14 +426,14 @@ Once your meeting concludes, Proxy-Meet automatically springs into action:
 
 <div align="center">
   <img src="pics/gmail_automate.png" alt="gmail" />
-  <p><em><b>Automated Gmail MoM Draft</b></em></p>
+  <p><em><b>Demo: Automated Gmail MoM Draft</b></em></p>
 </div>
 
 ✅ **Notion Logging** - Saves detailed meeting notes to your Notion workspace
 
 <div align="center">
   <img src="pics/notion_automate.png" alt="notion" />
-  <p><em><b>Automated Notion Notes</b></em></p>
+  <p><em><b>Demo: Automated Notion Notes</b></em></p>
 </div>
 
 ✅ **Interactive Dashboard** - Opens a beautiful Streamlit interface featuring:
@@ -443,7 +443,7 @@ Once your meeting concludes, Proxy-Meet automatically springs into action:
 
 <div align="center">
   <img src="pics/interface_2.gif" alt="interface" />
-  <p><em><b>Meeting Analyzer Interface</b></em></p>
+  <p><em><b>Demo: Meeting Analyzer Interface</b></em></p>
 </div>
 
 

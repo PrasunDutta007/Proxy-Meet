@@ -2,8 +2,13 @@
 
 ![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-blue?logo=windows)
 
+Feeling under the weather? Called away for an urgent matter? Don't let unexpected circumstances force you to miss important online meetings. PROXY-MEET seamlessly handles your meeting attendance, ensuring you maintain your commitments even when life gets in the way.
+
+Whether you're dealing with illness, family emergencies, or conflicting priorities, PROXY-MEET provides reliable meeting coverage so you never have to choose between your responsibilities and your well-being.
+
 An intelligent meeting automation system that acts as your proxy in online meetings, providing automated attendance, interacts when your name is called, 
 generates structured meeting notes using multiple AI agents and logs it into Notion, and creates professional Minutes of Meeting (MoM) email drafts.
+
 
 **⚠️ Note:** This application is currently optimized for Windows OS and may not function properly on macOS or Linux.
 
@@ -11,6 +16,7 @@ generates structured meeting notes using multiple AI agents and logs it into Not
   <img src="pics/demo.gif" alt="Proxy-Meet Demo" />
   <p><em><b>Proxy-Meet Demo: Intelligent Meeting Automation</b></em></p>
 </div>
+
 
 
 ## 🚀 Features

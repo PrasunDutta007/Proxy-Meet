@@ -39,7 +39,7 @@ generates structured meeting notes using multiple AI agents and logs it into Not
   
 <div align="center">
   <img src="pics/architecture.png" alt="Architecture Diagram" style="max-width: 100%; height: auto;">
-  <p><em>Proxy-Meet Architecture</em></p>
+  <p><em><b>Proxy-Meet Architecture</b></em></p>
 </div>
 
 The application uses a multi-agent system powered by CrewAI:
@@ -426,7 +426,7 @@ Once your meeting concludes, Proxy-Meet automatically springs into action:
 
 <div align="center">
   <img src="pics/gmail_automate.png" alt="gmail" />
-  <p><em><b>Automated Gmail Draft</b></em></p>
+  <p><em><b>Automated Gmail MoM Draft</b></em></p>
 </div>
 
 ✅ **Notion Logging** - Saves detailed meeting notes to your Notion workspace

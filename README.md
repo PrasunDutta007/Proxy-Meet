@@ -497,4 +497,4 @@ Once your meeting concludes, Proxy-Meet automatically springs into action:
 
 ---
 This project is licensed under the  GNU GPLv3 - see the [LICENSE](LICENSE) file for details.
-**Made with ❤️ by Proxy-Meet Team**
+**Made with ❤️ by Prasun**

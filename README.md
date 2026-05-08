@@ -1,500 +1,369 @@
-# 🤖📝 PROXY-MEET 📝🤖
+# Proxy-Meet: Intelligent Meeting Automation
 
-![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-blue?logo=windows)
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)
+![CrewAI](https://img.shields.io/badge/CrewAI-Multi--Agent-FF6B6B?style=flat-square&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-2.5%20Pro-4285F4?style=flat-square&logo=google&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
+![Gmail](https://img.shields.io/badge/Gmail%20API-EA4335?style=flat-square&logo=gmail&logoColor=white)
+![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-0078D6?style=flat-square&logo=windows&logoColor=white)
 
-Feeling under the weather? Called away for an urgent matter? Don't let unexpected circumstances force you to miss important online meetings. PROXY-MEET seamlessly handles your meeting attendance, ensuring you maintain your commitments even when life gets in the way.
+> An intelligent meeting automation system that acts as your proxy in Zoom meetings — joining automatically, responding via voice and chat when your name is called, transcribing the full session with speaker diarization via Google Gemini 2.5 Pro, analysing the transcript through a seven-agent CrewAI pipeline, and delivering structured meeting notes to Notion and a Minutes of Meeting draft to Gmail.
 
-Whether you're dealing with illness, family emergencies, or conflicting priorities, PROXY-MEET provides reliable meeting coverage so you never have to choose between your responsibilities and your well-being.
+---
 
-An intelligent meeting automation system that acts as your proxy in online meetings, providing automated attendance, interacts when your name is called, 
-generates structured meeting notes using multiple AI agents and logs it into Notion, and creates professional Minutes of Meeting (MoM) email drafts.
+## Table of Contents
 
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation and Setup](#installation-and-setup)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Virtual Environment](#2-virtual-environment)
+  - [3. Install Dependencies](#3-install-dependencies)
+  - [4. Environment Configuration](#4-environment-configuration)
+  - [5. Personal Avatar Setup](#5-personal-avatar-setup)
+  - [6. OBS Studio Setup](#6-obs-studio-setup)
+  - [7. FFmpeg and VB-CABLE Setup](#7-ffmpeg-and-vb-cable-setup)
+  - [8. Notion Integration Setup](#8-notion-integration-setup)
+  - [9. Google Gmail API Setup](#9-google-gmail-api-setup)
+  - [10. API Keys Required](#10-api-keys-required)
+  - [11. First Time Authentication](#11-first-time-authentication)
+  - [12. Bot Configuration](#12-bot-configuration)
+- [Getting Started](#getting-started)
+- [What Happens After the Meeting](#what-happens-after-the-meeting)
+- [Troubleshooting](#troubleshooting)
+- [Security and Privacy](#security-and-privacy)
 
-**⚠️ Note:** This application is currently optimized for Windows OS and may not function properly on macOS or Linux.
+---
 
-<div align="center">
-  <img src="pics/demo.gif" alt="Proxy-Meet Demo" />
-  <p><em><b>Proxy-Meet Demo: Intelligent Meeting Automation</b></em></p>
-</div>
+## Introduction
 
+Proxy-Meet solves a simple but frustrating problem — when you cannot attend a meeting, you currently have no good option besides asking someone else to cover for you or missing it entirely. This project automates attendance entirely: a bot joins the Zoom meeting on your behalf using a pre-recorded video avatar streamed via OBS Studio, monitors the conversation for your name, and responds intelligently via voice and the in-meeting chat window.
 
+Once the meeting ends, the system kicks off a full post-processing pipeline:
 
-## 🚀 Features
+- **Transcription** — the recorded audio is transcribed with speaker diarization via Google Gemini 2.5 Pro and AssemblyAI, producing both a structured JSON and a human-readable `.txt` file
+- **Multi-agent analysis** — a seven-agent CrewAI pipeline analyses the transcript, extracting themes, action items, key decisions, and structured notes in two formats (a predefined template and an AI-recommended format based on the meeting type)
+- **Notion logging** — both sets of meeting notes are automatically pushed to a structured Notion database
+- **Gmail draft** — a professional Minutes of Meeting email draft is created and waiting in Gmail, ready to send
 
-- **Automated Meeting Attendance**: Joins scheduled Zoom meetings automatically
-- **Intelligent Interaction**: AI-powered response via voice and in message window when your name is called
-- **Meeting Logging**: Automatic audio and transcript logging in `archives/` 
-- **Advanced Transcription**: Uses Google Gemini 2.5 Pro for accurate transcription with speaker diarization
-- **Dual Note-taking Strategy**: 
-  - Predefined structured format
-  - AI-recommended format based on meeting type (progress updates, brainstorming, 1-on-1s, interviews, etc.)
-- **Automated Email Distribution**: Creates MoM email drafts in Gmail
-- **Multi-Agent Analysis**: Uses CrewAI with specialized agents for comprehensive meeting analysis
-- **Professional Output**: Generates structured notes in Markdown format
-- **Notion Logging**: Automatically logs both the meeting-notes in an organized mannner in Notion 
-- **Streamlit Dashboard**: User-friendly web interface 
+The entire post-meeting workflow runs without any manual intervention.
 
+---
 
-## 🏛️ Architecture
-  
+## Architecture
+
 <div align="center">
   <img src="pics/architecture.png" alt="Architecture Diagram" style="max-width: 100%; height: auto;">
-  <p><em><b>Proxy-Meet Architecture</b></em></p>
+  <p><em>Proxy-Meet Architecture</em></p>
 </div>
 
-The application uses a multi-agent system powered by CrewAI:
+The application is built around a seven-agent CrewAI pipeline, where each agent has a single, clearly scoped responsibility:
 
-1. **Meeting Analyst** - Extracts core content and themes
-2. **Action Item Specialist** - Identifies actionable tasks
-3. **Content Organizer** - Structures information hierarchically
-4. **Quality Assurance Editor** - Ensures accuracy and formatting
-5. **Meeting Strategist** - Determines optimal documentation framework
-6. **Strategic Note Curator** - Applies sophisticated note-taking methodologies
-7. **Email Assistant** - Formats and distributes meeting minutes
+| Agent | Role |
+|---|---|
+| Meeting Analyst | Extracts core content and themes from the transcript |
+| Action Item Specialist | Identifies and structures all actionable tasks |
+| Content Organizer | Arranges information into a logical hierarchy |
+| Quality Assurance Editor | Verifies accuracy and enforces consistent formatting |
+| Meeting Strategist | Determines the optimal documentation framework based on meeting type |
+| Strategic Note Curator | Applies the chosen methodology to produce the second set of notes |
+| Email Assistant | Formats and composes the Minutes of Meeting email draft |
 
+**Why multi-agent instead of a single prompt?** Each agent specialises in one thing, produces a focused output, and passes it to the next. A single large prompt trying to do all of this at once loses coherence over long transcripts — chaining specialised agents maintains quality and makes each step auditable.
 
-## 📋 Prerequisites
+**Why OBS Studio for the avatar?** OBS acts as a virtual camera source, feeding the pre-recorded video into Zoom as if it were a live webcam feed. This means the bot appears as a real participant in the video grid rather than a faceless attendee.
 
-Before setting up Proxy-Meet, ensure you have:
+**Why Selenium for Zoom automation?** Zoom's desktop client does not expose a public API for meeting control. Selenium drives the browser-based Zoom web client, handling the join flow, name entry, and in-meeting interactions programmatically.
 
-- Python 3.8 or higher
-- OBS Studio 
-- ffmpeg
-- VB-CABLE (Virtual Audio Device)
-- Google Cloud Platform Account
-- Google API key (for Gemini AI)
-- Notion API key & Database Id
-- AssemblyAI API key
-- Stable internet connection
+---
 
-## 🛠️ Installation & Setup
+## Project Structure
 
-### Step 1: Clone the Repository
+```
+Proxy-Meet/
+├── venv/                                    # Virtual environment (excluded from git)
+├── archives/                                # Meeting records (excluded from git)
+│   └── meeting_*/                           # One folder per meeting
+│       ├── Meeting_Notes.md                 # Structured notes — predefined format
+│       ├── Meeting_Notes2.md                # Structured notes — AI-recommended format
+│       ├── recording.mp3                    # Full meeting audio recording
+│       ├── recording_transcript_*.json      # Transcript with speaker diarization (JSON)
+│       └── recording_transcript_*.txt       # Transcript with speaker diarization (readable)
+├── pics/                                    # README and documentation images
+├── credentials.json                         # Google OAuth credentials (excluded from git)
+├── token.json                               # OAuth access token (excluded from git)
+├── me.mp4                                   # Personal avatar video (excluded from git)
+├── .env                                     # Environment variables (excluded from git)
+├── requirements.txt                         # Python dependencies
+├── zoom_bot.py                              # Zoom meeting automation — join, respond, record
+├── agents.py                                # CrewAI agent definitions
+├── meeting_pipeline.py                      # Core post-meeting processing pipeline
+├── notion_logger.py                         # Pushes meeting notes to Notion
+├── tools.py                                 # Utility functions for agents
+├── utils.py                                 # General helper utilities
+├── streamlit_app.py                         # Post-meeting review dashboard
+├── meeting_scheduler.py                     # Streamlit scheduler interface
+└── scheduler_runner.py                      # Automated scheduled execution
+```
+
+---
+
+## Prerequisites
+
+| Requirement | Purpose |
+|---|---|
+| Python 3.8+ | Runtime |
+| OBS Studio | Virtual camera for avatar video |
+| FFmpeg | Audio processing and recording |
+| VB-CABLE | Virtual audio device for meeting capture |
+| Google Cloud account | Gmail API and Gemini AI access |
+| Google API key | Gemini 2.5 Pro transcription and analysis |
+| AssemblyAI API key | Speech-to-text transcription |
+| Notion account + API key | Meeting notes logging |
+| Langfuse account | AI interaction monitoring (optional) |
+
+---
+
+## Installation and Setup
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/Proxy-Meet.git
 cd Proxy-Meet
 ```
 
-### Step 2: Create Virtual Environment
+### 2. Virtual Environment
 
 ```bash
-# Create virtual environment
 python -m venv venv
-
-# Activate virtual environment
 venv\Scripts\activate.bat
 ```
 
-### Step 3: Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Environment Configuration
+### 4. Environment Configuration
 
 Create a `.env` file in the project root:
 
 ```env
-# Notion APIs
+# Notion
 NOTION_API_KEY="your_notion_internal_integration_secret_key"
 NOTION_DATABASE_ID="your_notion_database_id"
 
-# Zoom Configuration
+# Zoom
 ZOOM_LINK="your_zoom_meeting_link"
 WAIT_INTERVAL="30"
 MAX_WAIT_TIME="3600"
 
-# AI Configuration
-GOOGLE_API_KEY=your_google_api_key  
+# AI
+GOOGLE_API_KEY=your_google_api_key
 AAI_API_KEY=your_assemblyai_api_key
-LANGFUSE_PUBLIC_KEY="your_langfuse_publickey"
-LANGFUSE_SECRET_KEY="your_langfuse_secretkey"
-LANGFUSE_HOST="https://cloud.langfuse.com"  
+LANGFUSE_PUBLIC_KEY="your_langfuse_public_key"
+LANGFUSE_SECRET_KEY="your_langfuse_secret_key"
+LANGFUSE_HOST="https://cloud.langfuse.com"
 ```
 
-### Step 5: Personal Avatar Setup
+### 5. Personal Avatar Setup
 
-1. Record a short video of yourself (`me.mp4`) for avatar purposes
-2. Place it in the project root
-3. Ensure good lighting
+Record a short video of yourself (`me.mp4`) in good lighting and place it in the project root. This video is streamed via OBS as your virtual camera feed inside the Zoom meeting.
 
+### 6. OBS Studio Setup
 
-### Step 6: OBS Studio Setup
+**Installation** — download from [obsproject.com](https://obsproject.com/) and install to `C:\Program Files\`.
 
-#### 6.1 Installation:
+**Scene configuration:**
+1. Open OBS → right-click the Scenes panel → Add → name your scene → OK
+2. Under Sources, click `+` → Media Source → Create New → OK
+3. Browse to `me.mp4`, enable **Loop** and **Restart playback when source becomes active** → OK
 
-1. **Download OBS Studio:**
-   - Go to [OBS Studio](https://obsproject.com/)
-   - Download the installer for Windows
-   - Run the installer and complete the installation (make sure the installation location is in `C:\Program Files\`)
+OBS will now loop your video as a virtual camera source. Zoom will pick this up as a regular webcam feed.
 
-#### 6.2 Configuration:
+### 7. FFmpeg and VB-CABLE Setup
 
-1. **Scene Setup:**
-   - Launch OBS Studio
-   - Under **Scenes** panel (bottom left), create one profile:
-     - Right-click in Scenes area → Add → Enter scene name → OK
-
-2. **Source Configuration:**
-   - Under **Sources** panel (bottom center), add media source:
-     - Click the **+** button → Select **Media Source** → Create New → OK
-   - **Configure Media Source:**
-     - Browse and select your pre-recorded video file
-     - Check the following options:
-       - ✅ **Loop** 
-       - ✅ **Restart playback when source becomes active**
-     - Click **OK** to save settings
-
-3. **Verify Setup:**
-   ```bash
-   # Your video should now be playing in the preview window
-   # The video will loop continuously and restart when switching scenes
-   ```
-
-**Note:** This OBS configuration will allow your Proxy-Meet application to use the pre-recorded video as a virtual camera source during meetings.
-
-### Step 7: FFmpeg & VB-Cable Setup
-FFmpeg is required for audio processing in Proxy-Meet. Follow these steps to install it on Windows:
-
-#### 7.1 Download FFmpeg
-1. Go to [FFmpeg](https://ffmpeg.org/download.html#build-windows)
-2. Under "Windows EXE Files", select **"Built by BtBN"**
-3. Look for the **Assets** section and download: `ffmpeg-master-latest-win64-gpl.zip`
-  - *Note: If the Assets section is not visible, click to expand it*
-4. Extract the downloaded ZIP file to a temporary location
-
-#### 7.2 Install FFmpeg
-1. Create a new directory named `ffmpeg` directly under your C drive: `C:\ffmpeg\`
-2. Copy all contents from the extracted `ffmpeg-master-latest-win64-gpl` folder directly into `C:\ffmpeg\`
-
-The final structure should look like:
+**FFmpeg:**
+1. Download from [ffmpeg.org](https://ffmpeg.org/download.html#build-windows) — choose "Built by BtBN" → `ffmpeg-master-latest-win64-gpl.zip`
+2. Extract and copy contents to `C:\ffmpeg\` so the structure is:
 ```
-C:\ffmpeg
-├── bin
+C:\ffmpeg\
+├── bin\
 │   ├── ffmpeg.exe
 │   ├── ffplay.exe
 │   └── ffprobe.exe
-├── doc\
-└── LICENSE
+└── doc\
 ```
+3. Add `C:\ffmpeg\bin` to your System PATH (right-click This PC → Properties → Advanced system settings → Environment Variables → Path → New)
+4. Restart your terminal and verify: `ffmpeg -version`
 
-#### 7.3 Add FFmpeg to System PATH
-1. Right-click "This PC" → Properties → Advanced system settings
-2. Click "Environment Variables"
-3. Under "System Variables", find and select "Path", then click "Edit"
-4. Click "New" and add: `C:\ffmpeg\bin`
-5. Click "OK" to close all dialogs
-6. **Restart your command prompt/terminal**
+**VB-CABLE** — download the driver from [vb-audio.com](https://vb-audio.com/Cable/index.htm) and follow the on-page installation instructions. This creates a virtual audio device that captures meeting audio for recording.
 
-#### 7.4 Verify Installation
-Open a new command prompt and test:
-```bash
-ffmpeg -version
-```
-You should see FFmpeg version information if installed correctly.
+### 8. Notion Integration Setup
 
-#### 7.5 Download & Install VB-CABLE
-1. Go to [VB-CABLE](https://vb-audio.com/Cable/index.htm)
-2. Download the latest VB-CABLE Driver and follow the on-page installation instruction to Install
+**Create the integration:**
+1. Go to [notion.so/my-integrations](https://www.notion.so/my-integrations) → New integration → name it → Submit
+2. Copy the **Internal Integration Token** into `NOTION_API_KEY` in `.env`
 
+**Create the database:**
+1. In Notion, create a new page called `Meeting-Notes`
+2. Add an inline database called `Notes` with these columns:
 
-### Step 8: Notion Integration Setup
+| Column | Type |
+|---|---|
+| Title | Title |
+| Date | Date |
+| Type | Select |
+| Summary | Text |
+| Action Items | Text |
+| Detailed Notes | Text |
+| Status | Select (add option: New) |
+| Key Decisions | Text |
 
-#### 8.1 Account and Integration Setup:
+3. Open the database as a full page, copy the URL, and extract the 32-character database ID into `NOTION_DATABASE_ID` in `.env`
+4. On the integration page → Access → grant Full Access to the `Meeting-Notes` page
 
-1. **Create Notion Account:**
-   - Go to [Notion](https://notion.so/)
-   - Sign up for a new account or log in to existing account
+### 9. Google Gmail API Setup
 
-2. **Create Integration and Get API:**
-   - Go to [Notion Integration](https://www.notion.so/my-integrations)
-   - Click **+ New integration**
-   - Give your integration a name (e.g., "Proxy-Meet Integration")
-   - Select your workspace
-   - Click **Submit**
-   - Copy the **Internal Integration Token**
+**Enable the API:**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → create or select a project
+2. APIs & Services → Library → search Gmail API → Enable
 
-#### 8.2 Database Setup:
+**Create OAuth credentials:**
+1. APIs & Services → Credentials → Create Credentials → OAuth client ID → Desktop application
+2. Download the JSON, rename it to `credentials.json`, place it in the project root
 
-1. **Create Meeting Notes Page:**
-   - In your Notion workspace, create a new page
-   - Add heading: **Meeting-Notes**
+**Configure consent screen:**
+1. APIs & Services → OAuth consent screen → External
+2. Fill in app name, support email, and developer contact
+3. Add scope: `https://mail.google.com/`
+4. Add your email as a test user
 
-2. **Create Database:**
-   - Under the Meeting-Notes page, create a new inline database called **"Notes"**
-   - Add the following columns with their respective types:
+### 10. API Keys Required
 
-   | Column Name | Type |
-   |-------------|------|
-   | Title | Title |
-   | Date | Date |
-   | Type | Select |
-   | Summary | Text |
-   | Action Items | Text |
-   | Detailed Notes | Text |
-   | Status | Select (add option New) |
-   | Key Decisions | Text |
+| Key | Source | Used For |
+|---|---|---|
+| Google API key | [aistudio.google.com](https://aistudio.google.com/app/apikey) | Gemini 2.5 Pro transcription and analysis |
+| AssemblyAI key | [assemblyai.com](https://www.assemblyai.com/) | Speech-to-text transcription |
+| Langfuse keys | [langfuse.com](https://langfuse.com/) | AI interaction tracking and monitoring |
 
-3. **Get Database ID:**
-   - Click the six dots besides "Notes" heading of your database and click **Open as page**
-   - Click the three dots (top right corner) and Copy the URL from your browser
-   - The database ID is the 32-character string in the URL
-   - Format: `https://notion.so/your-workspace/DATABASE_ID?v=...`
+### 11. First Time Authentication
 
-4. **Configure Environment Variables:**
-   - Open your `.env` file in the Proxy-Meet project
-   - Add the following variables:
-   ```bash
-   # Notion Integration
-   NOTION_API_KEY=your_internal_integration_token_here
-   NOTION_DATABASE_ID=your_database_id_here
-   ```
+Run the bot once to trigger the Gmail OAuth flow:
 
-#### 8.3 Grant Database Access:
-- On the Integration page, click **Access**
-- Grant it **Full access** permissions to your **Meeting-Notes** page
-
-
-### Step 9: Google Gmail API Setup
-
-#### 9.1 Create a Google Cloud Project
-
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Gmail API:
-   - Navigate to **APIs & Services > Library**
-   - Search for "Gmail API"
-   - Click on it and press "Enable"
-
-#### 9.2 Create OAuth 2.0 Credentials
-
-1. Go to **APIs & Services > Credentials**
-2. Click **Create Credentials > OAuth client ID**
-3. Choose **Desktop application** as the application type
-4. Give it a name (e.g., "Proxy-Meet")
-5. Download the credentials JSON file
-6. Rename it to `credentials.json` and place it in your project root directory
-
-#### 9.3 Configure OAuth Consent Screen
-
-1. Go to **APIs & Services > OAuth consent screen**
-2. Choose **External** user type (unless you're using Google Workspace)
-3. Fill in the required information:
-   - App name: "Meeting Analyzer AI"
-   - User support email: Your email
-   - Developer contact information: Your email
-4. Add scopes:
-   - Click **Add or Remove Scopes**
-   - Add `https://mail.google.com/` (full Gmail access)
-5. Add test users (your email address) in the **Test users** section
-6. Save and continue
-
-### Step 10: API Keys Required
-
-1. **Google API Key**: 
-   - Get from [Google AI Studio](https://aistudio.google.com/app/apikey)
-   - Used for Gemini AI transcription and analysis
-
-2. **AssemblyAI API Key**:
-   - Get from [AssemblyAI](https://www.assemblyai.com/)
-   - For transcription service
-
-3. **Langfuse Keys**:
-   - Sign up at [Langfuse](https://langfuse.com/)
-   - For tracking and monitoring AI interactions
-  
-### Step 11: First Time Authentication
-
-1. Run the application for the first time:
 ```bash
 python zoom_bot.py
 ```
 
-2. When you first use a Gmail feature, you'll be redirected to Google's OAuth consent screen
-3. Sign in with your Google account
-4. Grant the necessary permissions
-5. A `token.json` file will be created automatically in your project directory
-6. As soon as the `token.json` file is created, interrupt the run with <kbd>Ctrl</kbd>+<kbd>C</kbd>
+You will be redirected to Google's OAuth consent screen. Sign in, grant permissions, and a `token.json` file will be created in the project root. Once the file appears, interrupt the run with `Ctrl+C` — authentication is complete and will not be needed again until the token expires.
 
+### 12. Bot Configuration
 
-### Step 12: Changing Bot Configuration
+Open `zoom_bot.py` and update the three personalisation settings:
 
-Configure the bot settings to personalize your meeting assistant by going to `zoom_bot.py`:
-
-1. **Set Bot Name**: Change the bot name to your preferred name
-   ```python
-   BOT_NAME = "prasun"  # Replace "prasun" with your name
-   ```
-
-2. **Customize Response Message**: Update the automated response text
-   ```python
-   RESPONSE_TEXT = "Hi, this is Prasun's assistant. Prasun is ill today, his bot is attending the meet !!"
-   # Change to your preferred response message
-   ```
-
-3. **Set Meeting Display Name**: 
-   - Use <kbd>Ctrl</kbd>+<kbd>F</kbd> to search for the line containing `name_input.send`
-   - Find this line:
-     ```python
-     name_input.send_keys("Prasun-Bot")
-     ```
-   - Change `"Prasun-Bot"` to the name you want to appear in the meeting
-
-**Example Configuration:**
 ```python
-BOT_NAME = "john"
-RESPONSE_TEXT = "Hello! This is John's AI assistant. John is temporarily unavailable !!"
-name_input.send_keys("John-Assistant")
+# Your name — used to detect when you are called in the meeting
+BOT_NAME = "prasun"
+
+# Message sent to chat when your name is detected
+RESPONSE_TEXT = "Hi, this is Prasun's assistant. Prasun is ill today, his bot is attending the meet !!"
+
+# Display name shown in the Zoom participants list
+name_input.send_keys("Prasun-Bot")
 ```
 
+---
 
-## 🏗️ Project Structure
+## Getting Started
 
-```
-Proxy-Meet/
-├── venv/                                    # Virtual environment (excluded from git)
-├── archives/                                # Meetings (excluded from git)
-│   └── meeting_*/                           # Individual meetings 
-│      ├── Meeting_Notes.md                  # Structured Notes using predefined format 
-│      ├── Meeting_Notes2.md                 # AI-recommended format based on meeting type 
-│      ├── recording.mp3                     # Meeting Recording 
-│      ├── recording_transcript_*.json       # Full Transcript with speaker identification in json format 
-│      └── recording_transcript_*.txt        # Full Transcript with speaker identification in human readable format 
-├── credentials.json                         # Google API credentials (excluded from git)
-├── .env                                     # Environment variables (excluded from git)
-├── me.mp4                                   # Personal video/avatar (excluded from git)
-├── token.json                               # OAuth tokens (excluded from git)
-├── requirements.txt                         # Python dependencies
-├── meeting_pipeline.py                      # Core meeting processing pipeline
-├── tools.py                                 # Utility functions and tools
-├── utils.py                                 # Helper utilities
-├── zoom_bot.py                              # Zoom meeting automation bot
-├── agents.py                                # AI agents for meeting interactions
-├── notion_logger.py                         # Logging Notes into Notion
-├── streamlit_app.py                         # Web interface using Streamlit
-├── scheduler_runner.py                      # Automated scheduler execution
-└── meeting_scheduler.py                     # Meeting scheduling and management
+**Method 1 — Streamlit scheduler (recommended):**
 
+```bash
+streamlit run meeting_scheduler.py
 ```
 
-
-## 🤖 Getting Started with Proxy-Meet
-
-Choose your preferred method below to get started.
-
-### 🌐 Method 1: Streamlit Web Interface
-
-#### Steps:
-1. **Launch the Application**
-   ```bash
-   streamlit run meeting_scheduler.py
-   ```
-
-2. **Configure Your Meeting**
-   - Enter your desired meeting date
-   - Set the meeting time
-   - Add your Zoom meeting link
-
-3. **Relax and Let Proxy-Meet Handle the Rest** 😌
+Enter the meeting date, time, and Zoom link in the web interface. Proxy-Meet handles everything from that point.
 
 <div align="center">
-  <img src="pics/interface.png" alt="interface" />
-  <p><em><b>Meeting Scheduler Interface</b></em></p>
+  <img src="pics/interface.png" alt="Streamlit Scheduler Interface" />
+  <p><em>Meeting Scheduler Interface</em></p>
 </div>
 
-### 💻 Method 2: Command Line Interface
+**Method 2 — Command line:**
 
-#### Steps:
-1. **Environment Setup**
-   - Navigate to your project folder
-   - Update the `.env` file with your Zoom meeting link in the `ZOOM_LINK` variable
+Update `ZOOM_LINK` in `.env`, then run:
 
-2. **Execute the Bot**
-   ```bash
-   python zoom_bot.py
-   ```
+```bash
+python zoom_bot.py
+```
 
-3. **You're All Set!** 😊
+---
 
-###  ❓ What Happens After Meet ❓
+## What Happens After the Meeting
 
-Once your meeting concludes, Proxy-Meet automatically springs into action:
+Once the meeting ends, the post-processing pipeline runs automatically with no manual steps required.
 
-✅ **Gmail Integration** - Creates a comprehensive Minutes of Meeting (MoM) draft in your Gmail
+**Gmail** — a complete Minutes of Meeting draft is created in your Gmail inbox, addressed and ready to send:
 
 <div align="center">
-  <img src="pics/gmail_automate.png" alt="gmail" />
-  <p><em><b>Demo: Automated Gmail MoM Draft</b></em></p>
+  <img src="pics/gmail_automate.png" alt="Automated Gmail MoM Draft" />
+  <p><em>Automated Gmail MoM Draft</em></p>
 </div>
 
-✅ **Notion Logging** - Saves detailed meeting notes to your Notion workspace
+**Notion** — both sets of structured meeting notes are pushed to your Notion database:
 
 <div align="center">
-  <img src="pics/notion_automate.png" alt="notion" />
-  <p><em><b>Demo: Automated Notion Notes</b></em></p>
+  <img src="pics/notion_automate.png" alt="Automated Notion Notes" />
+  <p><em>Automated Notion Notes</em></p>
 </div>
 
-✅ **Interactive Dashboard** - Opens a beautiful Streamlit interface featuring:
-- 🎵 Complete meeting audio recording
-- 📝 Full meeting transcript
-- 📋 Organized meeting notes and insights
+**Streamlit dashboard** — an interactive review interface opens automatically with the full audio recording, transcript, and organised notes:
 
 <div align="center">
-  <img src="pics/interface_2.gif" alt="interface" />
-  <p><em><b>Demo: Meeting Analyzer Interface</b></em></p>
+  <img src="pics/interface_2.gif" alt="Meeting Analyzer Dashboard" />
+  <p><em>Meeting Analyzer Dashboard</em></p>
 </div>
 
+---
 
+## Troubleshooting
 
-## 🐛 Troubleshooting
+### Zoom Join Failures
 
-### Common Issues
+Chrome's popup sequence when joining a Zoom meeting can vary between sessions, which affects the automated join flow. If the bot fails to join, inspect the popup handling logic inside `join_zoom_and_record()` in `zoom_bot.py` and adjust the sequence to match your browser's current behaviour.
 
-1. **"File not found" errors**: Ensure all required files are in the project root
-2. **Authentication errors**: Check that `credentials.json` is properly configured
-3. **API quota exceeded**: Monitor your Google API usage in the Cloud Console
-4. **Transcription failures**: If nothing was spoken during meet, audio too low or extremely poor audio quality
+### Meeting End Not Detected
 
+The bot detects meeting termination via the "meeting ended" signal. If the host simply leaves rather than formally ending the session, this signal is not sent and the bot will not terminate cleanly. Ensure meeting hosts use the **End Meeting for All** option.
+
+### Transcription Failures
+
+Transcription will fail or produce poor results if no audio was captured — this typically happens when VB-CABLE is not set as the active audio input, or if meeting audio levels were extremely low.
 
 ### Gmail Authentication Issues
 
-- **Refresh token expired**: Delete `token.json` and re-authenticate
-- **Scope errors**: Ensure the Gmail API is enabled in your Google Cloud project
-- **Permission denied**: Check that your app is not in testing mode restrictions
+If the Gmail OAuth flow breaks, delete `token.json` and re-run `zoom_bot.py` to re-authenticate. Ensure the Gmail API is enabled in your Google Cloud project and that your account is listed as a test user on the OAuth consent screen.
 
-### Meet Join and End Issues
+### General
 
-#### 🚪 Zoom Meeting Join Failures
-
-- **Issue:** The bot may occasionally fail to join Zoom meetings due to browser popup sequence variations.
-- **Root Cause:** Chrome's popup order can vary between sessions, affecting the automated joining process.
-- **Workaround:** If you encounter joining issues, modify the popup handling logic in the `join_zoom_and_record()` function in `zoom_bot.py` to match your browser's current popup sequence.
-
-#### 🔚 Meeting End Detection Failures  
-- **Issue:** The bot fails to properly detect meeting termination when the host leaves instead of ending the session.
-- **Root Cause:** The application is designed to detect "meeting ended" signals, but when hosts simply leave the meeting (rather than formally ending it), this trigger is not activated.
-- **Workaround:** Ensure meeting hosts use the "End Meeting" option rather than just leaving the session for proper bot functionality.
-
-
-
-## 🔒 Security & Privacy
-
-- **Credentials**: Never commit `credentials.json`, `token.json`, or `.env` files
-- **Video Data**: Personal video (`me.mp4`) stays local and is not uploaded
-- **Meeting Data**: All meeting logs are stored locally by default
-- **API Keys**: Store securely in environment variables
-- **Network**: Use HTTPS for all external API calls
-
-
-## 🙏 Acknowledgments
-
-- Built with [CrewAI](https://crewai.com/) for multi-agent orchestration
-- Uses [Google Gemini](https://deepmind.google/technologies/gemini/) for advanced AI capabilities
-- Powered by [Streamlit](https://streamlit.io/) for the web interface
-- Integrates with [Gmail API](https://developers.google.com/gmail/api) for email automation
+- "File not found" errors — confirm `credentials.json` and `me.mp4` are in the project root
+- API quota exceeded — check your Google API usage in the Cloud Console
 
 ---
-This project is licensed under the  GNU GPLv3 - see the [LICENSE](LICENSE) file for details.
-**Made with ❤️ by Prasun**
+
+## Security and Privacy
+
+- Never commit `credentials.json`, `token.json`, or `.env` — all three are gitignored by default
+- `me.mp4` stays local and is never uploaded to any external service
+- All meeting recordings and transcripts are stored locally in `archives/`
+- API keys are loaded exclusively from environment variables, never hardcoded
+- All external API calls use HTTPS
+
+---
+
+*Built by Prasun*

@@ -366,4 +366,6 @@ If the Gmail OAuth flow breaks, delete `token.json` and re-run `zoom_bot.py` to 
 
 ---
 
-*Built by Prasun*
+*Built by Prasun Dutta*
+
+---

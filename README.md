@@ -8,7 +8,7 @@
 ![Gmail](https://img.shields.io/badge/Gmail%20API-EA4335?style=flat-square&logo=gmail&logoColor=white)
 ![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-0078D6?style=flat-square&logo=windows&logoColor=white)
 
-> An intelligent meeting automation system that acts as your proxy in Zoom meetings — joining automatically, responding via voice and chat when your name is called, transcribing the full session with speaker diarization via Google Gemini 2.5 Pro, analysing the transcript through a seven-agent CrewAI pipeline, and delivering structured meeting notes to Notion and a Minutes of Meeting draft to Gmail.
+> An intelligent meeting automation system that acts as your proxy in Zoom meetings — joining automatically, responding via voice and chat when your name is called, transcribing the full session with speaker diarization via AssemblyAI, analysing the transcript through a seven-agent CrewAI pipeline, and delivering structured meeting notes to Notion and a Minutes of Meeting draft to Gmail.
 
 ---
 

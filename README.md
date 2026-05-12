@@ -1,4 +1,14 @@
+<table border="0" cellspacing="0" cellpadding="10">
+<tr>
+<td><img src="pics/robot.gif" width="80" height="80"/></td>
+<td>
+
 # Proxy-Meet: Intelligent Meeting Automation
+
+</td>
+</tr>
+</table>
+
 
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![CrewAI](https://img.shields.io/badge/CrewAI-Multi--Agent-FF6B6B?style=flat-square&logoColor=white)
@@ -366,6 +376,11 @@ If the Gmail OAuth flow breaks, delete `token.json` and re-run `zoom_bot.py` to 
 
 ---
 
-*Built by Prasun Dutta*
+<p align="center">
+  Built by Prasun Dutta · Assisted by <a href="https://code.claude.com/docs/en/overview">Claude Code</a>
+</p>
 
 ---
+<p align="center">
+  <sub>Animated icons by <a href="https://www.flaticon.com/free-animated-icons/robot" title="robot animated icons">Robot animated icons created by Freepik - Flaticon</a></sub>
+</p>

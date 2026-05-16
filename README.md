@@ -18,7 +18,7 @@
 ![Gmail](https://img.shields.io/badge/Gmail%20API-EA4335?style=flat-square&logo=gmail&logoColor=white)
 ![Windows Only](https://img.shields.io/badge/Platform-Windows%20Only-0078D6?style=flat-square&logo=windows&logoColor=white)
 
-> An intelligent meeting automation system that acts as your proxy in Zoom meetings — joining automatically, responding via voice and chat when your name is called, transcribing the full session with speaker diarization via AssemblyAI, analysing the transcript through a seven-agent CrewAI pipeline, and delivering structured meeting notes to Notion and a Minutes of Meeting draft to Gmail.
+> An intelligent meeting automation system that acts as your proxy in Zoom meetings - joining automatically, responding via voice and chat when your name is called, transcribing the full session with speaker diarization via AssemblyAI, analysing the transcript through a seven-agent CrewAI pipeline, and delivering structured meeting notes to Notion and a Minutes of Meeting draft to Gmail.
 
 ---
 
@@ -50,14 +50,14 @@
 
 ## Introduction
 
-Proxy-Meet solves a simple but frustrating problem — when you cannot attend a meeting, you currently have no good option besides asking someone else to cover for you or missing it entirely. This project automates attendance entirely: a bot joins the Zoom meeting on your behalf using a pre-recorded video avatar streamed via OBS Studio, monitors the conversation for your name, and responds intelligently via voice and the in-meeting chat window.
+Proxy-Meet solves a simple but frustrating problem - when you cannot attend a meeting, you currently have no good option besides asking someone else to cover for you or missing it entirely. This project automates attendance entirely: a bot joins the Zoom meeting on your behalf using a pre-recorded video avatar streamed via OBS Studio, monitors the conversation for your name, and responds intelligently via voice and the in-meeting chat window.
 
 Once the meeting ends, the system kicks off a full post-processing pipeline:
 
-- **Transcription** — the recorded audio is transcribed with speaker diarization via Google Gemini 2.5 Pro and AssemblyAI, producing both a structured JSON and a human-readable `.txt` file
-- **Multi-agent analysis** — a seven-agent CrewAI pipeline analyses the transcript, extracting themes, action items, key decisions, and structured notes in two formats (a predefined template and an AI-recommended format based on the meeting type)
-- **Notion logging** — both sets of meeting notes are automatically pushed to a structured Notion database
-- **Gmail draft** — a professional Minutes of Meeting email draft is created and waiting in Gmail, ready to send
+- **Transcription** - the recorded audio is transcribed with speaker diarization via Google Gemini 2.5 Pro and AssemblyAI, producing both a structured JSON and a human-readable `.txt` file
+- **Multi-agent analysis** - a seven-agent CrewAI pipeline analyses the transcript, extracting themes, action items, key decisions, and structured notes in two formats (a predefined template and an AI-recommended format based on the meeting type)
+- **Notion logging** - both sets of meeting notes are automatically pushed to a structured Notion database
+- **Gmail draft** - a professional Minutes of Meeting email draft is created and waiting in Gmail, ready to send
 
 The entire post-meeting workflow runs without any manual intervention.
 
@@ -82,7 +82,7 @@ The application is built around a seven-agent CrewAI pipeline, where each agent 
 | Strategic Note Curator | Applies the chosen methodology to produce the second set of notes |
 | Email Assistant | Formats and composes the Minutes of Meeting email draft |
 
-**Why multi-agent instead of a single prompt?** Each agent specialises in one thing, produces a focused output, and passes it to the next. A single large prompt trying to do all of this at once loses coherence over long transcripts — chaining specialised agents maintains quality and makes each step auditable.
+**Why multi-agent instead of a single prompt?** Each agent specialises in one thing, produces a focused output, and passes it to the next. A single large prompt trying to do all of this at once loses coherence over long transcripts - chaining specialised agents maintains quality and makes each step auditable.
 
 **Why OBS Studio for the avatar?** OBS acts as a virtual camera source, feeding the pre-recorded video into Zoom as if it were a live webcam feed. This means the bot appears as a real participant in the video grid rather than a faceless attendee.
 
@@ -97,8 +97,8 @@ Proxy-Meet/
 ├── venv/                                    # Virtual environment (excluded from git)
 ├── archives/                                # Meeting records (excluded from git)
 │   └── meeting_*/                           # One folder per meeting
-│       ├── Meeting_Notes.md                 # Structured notes — predefined format
-│       ├── Meeting_Notes2.md                # Structured notes — AI-recommended format
+│       ├── Meeting_Notes.md                 # Structured notes - predefined format
+│       ├── Meeting_Notes2.md                # Structured notes - AI-recommended format
 │       ├── recording.mp3                    # Full meeting audio recording
 │       ├── recording_transcript_*.json      # Transcript with speaker diarization (JSON)
 │       └── recording_transcript_*.txt       # Transcript with speaker diarization (readable)
@@ -108,7 +108,7 @@ Proxy-Meet/
 ├── me.mp4                                   # Personal avatar video (excluded from git)
 ├── .env                                     # Environment variables (excluded from git)
 ├── requirements.txt                         # Python dependencies
-├── zoom_bot.py                              # Zoom meeting automation — join, respond, record
+├── zoom_bot.py                              # Zoom meeting automation - join, respond, record
 ├── agents.py                                # CrewAI agent definitions
 ├── meeting_pipeline.py                      # Core post-meeting processing pipeline
 ├── notion_logger.py                         # Pushes meeting notes to Notion
@@ -187,7 +187,7 @@ Record a short video of yourself (`me.mp4`) in good lighting and place it in the
 
 ### 6. OBS Studio Setup
 
-**Installation** — download from [obsproject.com](https://obsproject.com/) and install to `C:\Program Files\`.
+**Installation** - download from [obsproject.com](https://obsproject.com/) and install to `C:\Program Files\`.
 
 **Scene configuration:**
 1. Open OBS → right-click the Scenes panel → Add → name your scene → OK
@@ -199,7 +199,7 @@ OBS will now loop your video as a virtual camera source. Zoom will pick this up 
 ### 7. FFmpeg and VB-CABLE Setup
 
 **FFmpeg:**
-1. Download from [ffmpeg.org](https://ffmpeg.org/download.html#build-windows) — choose "Built by BtBN" → `ffmpeg-master-latest-win64-gpl.zip`
+1. Download from [ffmpeg.org](https://ffmpeg.org/download.html#build-windows) - choose "Built by BtBN" → `ffmpeg-master-latest-win64-gpl.zip`
 2. Extract and copy contents to `C:\ffmpeg\` so the structure is:
 ```
 C:\ffmpeg\
@@ -212,7 +212,7 @@ C:\ffmpeg\
 3. Add `C:\ffmpeg\bin` to your System PATH (right-click This PC → Properties → Advanced system settings → Environment Variables → Path → New)
 4. Restart your terminal and verify: `ffmpeg -version`
 
-**VB-CABLE** — download the driver from [vb-audio.com](https://vb-audio.com/Cable/index.htm) and follow the on-page installation instructions. This creates a virtual audio device that captures meeting audio for recording.
+**VB-CABLE** - download the driver from [vb-audio.com](https://vb-audio.com/Cable/index.htm) and follow the on-page installation instructions. This creates a virtual audio device that captures meeting audio for recording.
 
 ### 8. Notion Integration Setup
 
@@ -270,14 +270,14 @@ Run the bot once to trigger the Gmail OAuth flow:
 python zoom_bot.py
 ```
 
-You will be redirected to Google's OAuth consent screen. Sign in, grant permissions, and a `token.json` file will be created in the project root. Once the file appears, interrupt the run with `Ctrl+C` — authentication is complete and will not be needed again until the token expires.
+You will be redirected to Google's OAuth consent screen. Sign in, grant permissions, and a `token.json` file will be created in the project root. Once the file appears, interrupt the run with `Ctrl+C` - authentication is complete and will not be needed again until the token expires.
 
 ### 12. Bot Configuration
 
 Open `zoom_bot.py` and update the three personalisation settings:
 
 ```python
-# Your name — used to detect when you are called in the meeting
+# Your name - used to detect when you are called in the meeting
 BOT_NAME = "prasun"
 
 # Message sent to chat when your name is detected
@@ -291,7 +291,7 @@ name_input.send_keys("Prasun-Bot")
 
 ## Getting Started
 
-**Method 1 — Streamlit scheduler (recommended):**
+**Method 1 - Streamlit scheduler (recommended):**
 
 ```bash
 streamlit run meeting_scheduler.py
@@ -304,7 +304,7 @@ Enter the meeting date, time, and Zoom link in the web interface. Proxy-Meet han
   <p><em>Meeting Scheduler Interface</em></p>
 </div>
 
-**Method 2 — Command line:**
+**Method 2 - Command line:**
 
 Update `ZOOM_LINK` in `.env`, then run:
 
@@ -318,21 +318,21 @@ python zoom_bot.py
 
 Once the meeting ends, the post-processing pipeline runs automatically with no manual steps required.
 
-**Gmail** — a complete Minutes of Meeting draft is created in your Gmail inbox, addressed and ready to send:
+**Gmail** - a complete Minutes of Meeting draft is created in your Gmail inbox, addressed and ready to send:
 
 <div align="center">
   <img src="pics/gmail_automate.png" alt="Automated Gmail MoM Draft" />
   <p><em>Automated Gmail MoM Draft</em></p>
 </div>
 
-**Notion** — both sets of structured meeting notes are pushed to your Notion database:
+**Notion** - both sets of structured meeting notes are pushed to your Notion database:
 
 <div align="center">
   <img src="pics/notion_automate.png" alt="Automated Notion Notes" />
   <p><em>Automated Notion Notes</em></p>
 </div>
 
-**Streamlit dashboard** — an interactive review interface opens automatically with the full audio recording, transcript, and organised notes:
+**Streamlit dashboard** - an interactive review interface opens automatically with the full audio recording, transcript, and organised notes:
 
 <div align="center">
   <img src="pics/interface_2.gif" alt="Meeting Analyzer Dashboard" />
@@ -353,7 +353,7 @@ The bot detects meeting termination via the "meeting ended" signal. If the host 
 
 ### Transcription Failures
 
-Transcription will fail or produce poor results if no audio was captured — this typically happens when VB-CABLE is not set as the active audio input, or if meeting audio levels were extremely low.
+Transcription will fail or produce poor results if no audio was captured - this typically happens when VB-CABLE is not set as the active audio input, or if meeting audio levels were extremely low.
 
 ### Gmail Authentication Issues
 
@@ -361,14 +361,14 @@ If the Gmail OAuth flow breaks, delete `token.json` and re-run `zoom_bot.py` to 
 
 ### General
 
-- "File not found" errors — confirm `credentials.json` and `me.mp4` are in the project root
-- API quota exceeded — check your Google API usage in the Cloud Console
+- "File not found" errors - confirm `credentials.json` and `me.mp4` are in the project root
+- API quota exceeded - check your Google API usage in the Cloud Console
 
 ---
 
 ## Security and Privacy
 
-- Never commit `credentials.json`, `token.json`, or `.env` — all three are gitignored by default
+- Never commit `credentials.json`, `token.json`, or `.env` - all three are gitignored by default
 - `me.mp4` stays local and is never uploaded to any external service
 - All meeting recordings and transcripts are stored locally in `archives/`
 - API keys are loaded exclusively from environment variables, never hardcoded
@@ -384,3 +384,4 @@ If the Gmail OAuth flow breaks, delete `token.json` and re-run `zoom_bot.py` to 
 <p align="center">
   <sub>Animated icons by <a href="https://www.flaticon.com/free-animated-icons/robot" title="robot animated icons">Robot animated icons created by Freepik - Flaticon</a></sub>
 </p>
+
